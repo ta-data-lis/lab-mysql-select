@@ -62,7 +62,7 @@ Now modify your solution in Challenge 3 so that the output will display all 23 a
 
 ## Submission
 
-* Add `solutions.sql` to git.
+* Add `solutions.sql` to git..
 * Commit your code.
 * Push to your fork.
 * Create a pull request to the class repo.
