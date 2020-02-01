@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>publications</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>-4363339018946626942</string>
+			<key>name</key>
+			<string>localhost</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8</string>
+			<key>contentFilterV2</key>
+			<dict>
+				<key>children</key>
+				<array/>
+				<key>filterClass</key>
+				<string>groupNode</string>
+				<key>isConjunction</key>
+				<true/>
+			</dict>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGNjdYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoK0HCBUWFxgZHSQoLDA0VSRudWxs0wkK
+			CwwQFFdOUy5rZXlzWk5TLm9iamVjdHNWJGNsYXNzow0OD4ACgAOA
+			BKMREhOABYAGgAiADFR0eXBlVHJvd3NUa2V5c18QJlNlbGVjdGlv
+			bkRldGFpbFR5cGVQcmltYXJ5S2V5ZWREZXRhaWxz0wkKCxobHKCg
+			gAfSHh8gIVokY2xhc3NuYW1lWCRjbGFzc2VzXxATTlNNdXRhYmxl
+			RGljdGlvbmFyeaMgIiNcTlNEaWN0aW9uYXJ5WE5TT2JqZWN00goL
+			JSehJoAJgAvSCykqK1lOUy5zdHJpbmeAClh0aXRsZV9pZNIeHy0u
+			XxAPTlNNdXRhYmxlU3RyaW5noy0vI1hOU1N0cmluZ9IeHzEyXk5T
+			TXV0YWJsZUFycmF5ozEzI1dOU0FycmF50h4fIjWiIiNfEA9OU0tl
+			eWVkQXJjaGl2ZXLRODlUZGF0YYABAAgAEQAaACMALQAyADcARQBL
+			AFIAWgBlAGwAcAByAHQAdgB6AHwAfgCAAIIAhwCMAJEAugDBAMIA
+			wwDFAMoA1QDeAPQA+AEFAQ4BEwEVARcBGQEeASgBKgEzATgBSgFO
+			AVcBXAFrAW8BdwF8AX8BkQGUAZkAAAAAAAACAQAAAAAAAAA6AAAA
+			AAAAAAAAAAAAAAABmw==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {566, 657}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>CREATE DATABASE publications;
+
+#Challenge 1
+CREATE TABLE authors_publishers
+SELECT authors.au_id as AUTHORS, au_lname as LASTNAME, au_fname as FIRSTNAME, title as TITLE, pub_name as PUBLISHER FROM authors
+INNER JOIN titleauthor ON authors.au_id = titleauthor.au_id
+INNER JOIN titles ON titles.title_id = titleauthor.title_id
+INNER JOIN publishers ON publishers.pub_id = titles.pub_id;
+
+
+#count number of rows
+select count(*) from titleauthor;
+
+select count(*) from authors_publishers;
+
+#Challenge 2 - How many titles each author has published at each publisher
+SELECT AUTHORS, LASTNAME, FIRSTNAME, PUBLISHER, COUNT(TITLE) FROM authors_publishers GROUP BY AUTHORS, PUBLISHER, LASTNAME, FIRSTNAME ORDER BY COUNT(TITLE) DESC ;
+
+
+# Challenge 3 - who are the top 3 authors who have sold the highest number of titles?
+CREATE TEMPORARY TABLE sales
+SELECT authors.au_id, au_lname,  au_fname, ytd_sales as TOTAL
+FROM authors
+INNER titleauthor ON authors.au_id = titleauthor.au_id
+INNER JOIN titles ON titles.title_id = titleauthor.title_id;
+
+
+SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY sales DESC LIMIT 3;
+
+#Challenge 4 - Best Selling Authors Ranking
+
+SELECT au_id, au_lname, au_fname, IFNULL(SUM(TOTAL),0) AS TOTAL FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY TOTAL DESC;
+
+
+
+
+</string>
+			<key>table</key>
+			<string>titles</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>235</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>#Challenge 4 - Best Selling Authors Ranking
+
+SELECT au_id, au_lname, au_fname, IFNULL(SUM(TOTAL),0) AS TOTAL FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY TOTAL DESC</string>
+		<string>#Challenge 4 - Best Selling Authors Ranking
+
+SELECT au_id, au_lname, au_fname, IFNULL(SUM(TOTAL),0) AS TOTAL FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY IFNULL(TOTAL),0) DESC</string>
+		<string>#Challenge 4 - Best Selling Authors Ranking
+
+SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS TOTAL FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY TOTAL DESC</string>
+		<string>SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY sales DESC LIMIT 3</string>
+		<string># Challenge 3 - who are the top 3 authors who have sold the highest number of titles?
+CREATE TEMPORARY TABLE sales
+SELECT authors.au_id, au_lname,  au_fname, ytd_sales as TOTAL
+FROM authors
+INNER titleauthor ON authors.au_id = titleauthor.au_id
+INNER JOIN titles ON titles.title_id = titleauthor.title_id</string>
+		<string>select count(*) from sales</string>
+		<string># Challenge 3 - who are the top 3 authors who have sold the highest number of titles?
+CREATE TEMPORARY TABLE sales
+SELECT authors.au_id, au_lname,  au_fname, ytd_sales as TOTAL
+FROM authors
+LEFT JOIN titleauthor ON authors.au_id = titleauthor.au_id
+LEFT JOIN titles ON titles.title_id = titleauthor.title_id</string>
+		<string># Challenge 3 - who are the top 3 authors who have sold the highest number of titles?
+CREATE TEMPORARY TABLE sales
+SELECT authors.au_id, au_lname,  au_fname, ytd_sales as TOTAL
+FROM authors
+INNER JOIN titleauthor ON authors.au_id = titleauthor.au_id
+INNER JOIN titles ON titles.title_id = titleauthor.title_id</string>
+		<string>SELECT * from sales</string>
+		<string>SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS TOTAL FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY TOTAL DESC</string>
+		<string>#Challenge 4 - Best Selling Authors Ranking
+
+SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS TOTAL FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY sales DESC</string>
+		<string>#Challenge 4 - Best Selling Authors Ranking
+
+SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY sales DESC</string>
+		<string>SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY sales LIMIT 3</string>
+		<string>SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY sales</string>
+		<string>SELECT au_id, au_lname, au_fname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname,au_fname ORDER BY au_id</string>
+		<string>SELECT au_id, au_lname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id, au_lname ORDER BY au_id</string>
+		<string>SELECT au_id, au_lname, SUM(TOTAL) AS sales FROM sales GROUP BY au_id ORDER BY au_id</string>
+		<string>SELECT au_id, SUM(TOTAL) AS sales FROM sales GROUP BY au_id ORDER BY au_id</string>
+		<string>SELECT SUM(TOTAL) AS sales FROM sales GROUP BY au_id ORDER BY au_id</string>
+		<string>SELECT SUM(TOTAL) AS sales FROM sales GROUP BY au_id</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>8.0.18</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>
