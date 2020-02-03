@@ -45,7 +45,7 @@ LIMIT 3;
 
 #4
 
-SELECT au.au_id AS 'AUTHOR ID', au.au_lname AS 'LAST NAME', au.au_fname AS 'FIRST NAME', SUM(sal.qty) AS 'TOTAL'
+SELECT au.au_id AS 'AUTHOR ID', au.au_lname AS 'LAST NAME', au.au_fname AS 'FIRST NAME', coalesce(sum(sal.qty),0) AS 'TOTAL'
 FROM Publications.authors au
 LEFT JOIN titleauthor ta 
 ON au.au_id = ta.au_id
@@ -57,4 +57,7 @@ GROUP BY au.au_id
 ORDER BY SUM(sal.qty) DESC
 LIMIT 23;
 
+
 #DONT KNOW HOW TO CHANGE THE NULL TO ZERO: tried to use  SELECT IS NULL( col, 0) from table but dont understand where should i put it 
+
+#R: ADDED coalesce(sum(sal.qty),0) that Ricardo said in class!!! TOPP
