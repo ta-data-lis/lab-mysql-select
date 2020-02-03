@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>publications</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>8774029276726229902</string>
+			<key>name</key>
+			<string>localhost</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8</string>
+			<key>contentFilterV2</key>
+			<dict>
+				<key>children</key>
+				<array/>
+				<key>filterClass</key>
+				<string>groupNode</string>
+				<key>isConjunction</key>
+				<true/>
+			</dict>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0
+			b3BYJG9iamVjdHMSAAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRk
+			YXRhgAGuCwwZGhscHSEoLTE1ODxVJG51bGzTDQ4PEBQYV05TLmtl
+			eXNaTlMub2JqZWN0c1YkY2xhc3OjERITgAKAA4AEoxUWF4AFgAaA
+			CIANVHR5cGVUcm93c1RrZXlzXxAmU2VsZWN0aW9uRGV0YWlsVHlw
+			ZVByaW1hcnlLZXllZERldGFpbHPTDQ4PHh8goKCAB9IiIyQlWiRj
+			bGFzc25hbWVYJGNsYXNzZXNfEBNOU011dGFibGVEaWN0aW9uYXJ5
+			oyQmJ1xOU0RpY3Rpb25hcnlYTlNPYmplY3TSDg8pLKIqK4AJgAuA
+			DNIPLi8wWU5TLnN0cmluZ4AKVWF1X2lk0iIjMjNfEA9OU011dGFi
+			bGVTdHJpbmejMjQnWE5TU3RyaW5n0g8uLzeAClh0aXRsZV9pZNIi
+			Izk6Xk5TTXV0YWJsZUFycmF5ozk7J1dOU0FycmF50iIjJj2iJicA
+			CAARABoAJAApADIANwBJAEwAUQBTAGIAaABvAHcAggCJAI0AjwCR
+			AJMAlwCZAJsAnQCfAKQAqQCuANcA3gDfAOAA4gDnAPIA+wERARUB
+			IgErATABMwE1ATcBOQE+AUgBSgFQAVUBZwFrAXQBeQF7AYQBiQGY
+			AZwBpAGpAAAAAAAAAgEAAAAAAAAAPgAAAAAAAAAAAAAAAAAAAaw=
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {1229, 751}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string># Challenge 1 - Who Have Published What At Where?
+
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", titles.title AS "TITLE", publishers.pub_name AS "PUBLISHER"
+FROM publications.titleauthor
+INNER JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+INNER JOIN publications.titles ON titleauthor.title_id = titles.title_id
+INNER JOIN publications.publishers ON titles.pub_id = publishers.pub_id;
+
+# Challenge 2 - Who Have Published How Many At Where?
+CREATE TEMPORARY TABLE publications.who_many_where_summary
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", publishers.pub_name AS "PUBLISHER", COUNT(titles.title) AS "TITLE COUNT"
+FROM publications.titleauthor
+INNER JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+INNER JOIN publications.titles ON titleauthor.title_id = titles.title_id
+INNER JOIN publications.publishers ON titles.pub_id = publishers.pub_id
+GROUP BY authors.au_id, publishers.pub_id;
+
+SELECT *
+FROM publications.who_many_where_summary;
+
+#DROP TABLE IF EXISTS who_many_where_summary;
+
+# use the -&gt; `  ` &lt;- to access tables with spaces in their names
+SELECT SUM(`TITLE COUNT`)
+FROM publications.who_many_where_summary;
+
+SELECT COUNT(*)
+FROM publications.titleauthor;
+
+# Challenge 3 - Best Selling Authors
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(sales.qty) AS "TOTAL"
+FROM publications.titleauthor
+RIGHT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON titles.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC
+LIMIT 3;
+
+# Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", COALESCE(sum(sales.qty), 0) AS "TOTAL"
+FROM publications.titleauthor
+RIGHT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = titles.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC;
+
+SELECT * 
+FROM publications.best_selling_rank;
+
+# DROP TABLE IF EXISTS publications.best_selling_rank;</string>
+			<key>table</key>
+			<string>titleauthor</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>212</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>SELECT * 
+FROM publications.best_selling_rank</string>
+		<string># Challenge 3 - Best Selling Authors
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(sales.qty) AS "TOTAL"
+FROM publications.titleauthor
+RIGHT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON titles.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC
+LIMIT 3</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", COALESCE(sum(sales.qty), 0) AS "TOTAL"
+FROM publications.titleauthor
+RIGHT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = titles.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string>DROP TABLE IF EXISTS publications.best_selling_rank</string>
+		<string>#SELECT IFNULL(`TOTAL`, 0) AS "TOTAL"
+#FROM publications.best_selling_rank;
+
+#SELECT *
+#FROM publications.best_selling_rank
+#WHERE `TOTAL` IS NULL;
+
+SELECT * 
+FROM publications.best_selling_rank</string>
+		<string>#SELECT IFNULL(`TOTAL`, 0) AS "TOTAL"
+#FROM publications.best_selling_rank;
+
+#SELECT *
+#FROM publications.best_selling_rank
+#WHERE `TOTAL` IS NULL;
+
+SELECT * 
+FROM pubxlications.best_selling_rank</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", COALESCE(sum(sales.qty), 0) AS "TOTAL"
+FROM publications.titleauthor
+LEFT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = titles.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(COALESCE(sales.qty, 0)) AS "TOTAL"
+FROM publications.titleauthor
+LEFT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = titles.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string># Challenge 3 - Best Selling Authors
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(sales.qty) AS "TOTAL"
+FROM publications.titleauthor
+INNER JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+INNER JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON titles.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC
+LIMIT 3</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(COALESCE(sales.qty, 0)) AS "TOTAL"
+FROM publications.titleauthor
+LEFT JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+LEFT JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(COALESCE(sales.qty, 0)) AS "TOTAL"
+FROM publications.titleauthor
+INNER JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+INNER JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(COALESCE(sales.qty), 0) AS "TOTAL"
+FROM publications.titleauthor
+INNER JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+INNER JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string># Challenge 4 - Best Selling Authors Ranking
+CREATE TEMPORARY TABLE publications.best_selling_rank
+SELECT authors.au_id AS "AUTHOR ID", authors.au_lname AS "LAST NAME", authors.au_fname AS "FIRST NAME", sum(COALESCE(sales.qty)) AS "TOTAL"
+FROM publications.titleauthor
+INNER JOIN publications.authors ON titleauthor.au_id = authors.au_id 
+INNER JOIN publications.titles ON titleauthor.title_id = titles.title_id
+LEFT JOIN publications.sales ON sales.title_id = sales.title_id
+GROUP BY authors.au_id
+ORDER BY TOTAL DESC</string>
+		<string>sales.qty</string>
+		<string>SELECT *
+FROM publications.best_selling_rank
+WHERE `TOTAL` IS NULL</string>
+		<string>SELECT *
+FROM publications.best_selling_rank
+WHERE `TOTAL`IS NULL`;
+
+SELECT * 
+FROM publications.best_selling_rank;</string>
+		<string>SELECT IFNULL(`TOTAL`, 0) AS "TOTAL"
+FROM publications.best_selling_rank</string>
+		<string>SELECT "AUTHOR ID", "LAST NAME", "FIRST NAME", IFNULL("TOTAL", 0) AS "TOTAL"
+FROM publications.best_selling_rank</string>
+		<string>"TOTAL"</string>
+		<string>SELECT "AUTHOR ID", "LAST NAME", "FIRST NAME", IFNULL(`TOTAL`, 0) AS "TOTAL"
+FROM publications.best_selling_rank</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>8.0.18</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>
