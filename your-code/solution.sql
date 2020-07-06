@@ -36,4 +36,31 @@ GROUP BY a.au_id, p.pub_id;
 
 
 /* CHALLENGE 3 */
+SELECT 
+a.au_id AS 'AUTHOR ID', 
+a.au_lname AS 'LAST NAME', 
+a.au_fname AS 'FIRST NAME', 
+SUM(t.ytd_sales) AS 'TOTAL'
+FROM authors AS a
+INNER JOIN titleauthor AS ta
+ON a.au_id = ta.au_id
+INNER JOIN titles AS t
+ON ta.title_id = t.title_id
+GROUP BY a.au_id
+ORDER BY TOTAL DESC
+LIMIT 3;
 
+
+/* CHALLENGE 4 */
+SELECT 
+a.au_id AS 'AUTHOR ID', 
+a.au_lname AS 'LAST NAME', 
+a.au_fname AS 'FIRST NAME', 
+IFNULL(SUM(t.ytd_sales),0) AS 'TOTAL'
+FROM authors AS a
+LEFT JOIN titleauthor AS ta
+ON a.au_id = ta.au_id
+LEFT JOIN titles AS t
+ON ta.title_id = t.title_id
+GROUP BY a.au_id
+ORDER BY TOTAL DESC;
