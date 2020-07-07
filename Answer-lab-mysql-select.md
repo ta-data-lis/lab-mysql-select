@@ -92,10 +92,3 @@ Now modify your solution in Challenge 3 so that the output will display all 23 a
                 
 GROUP BY 1, 2, 3
 ORDER BY 4 DESC ; 
- 
- 
- 
- 
-
-
-	
