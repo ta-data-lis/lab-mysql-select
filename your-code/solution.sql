@@ -58,10 +58,10 @@ Requirements:
 * Only output the top 3 best selling authors.
 */
 
-SELECT A.au_id, A.au_lname, A.au_fname, SUM(T.ytd_sales) AS total
+SELECT A.au_id, A.au_lname, A.au_fname, SUM(SQ.tot_qty) AS total
 FROM ironhack.authors AS A 
 INNER JOIN ironhack.titleauthor AT ON AT.au_id = A.au_id
-INNER JOIN ironhack.titles T ON T.title_id = AT.title_id
+INNER JOIN (SELECT title_id, SUM(qty) AS tot_qty FROM sales GROUP BY title_id) SQ ON SQ.title_id = AT.title_ID
 GROUP BY A.au_id, A.au_lname, A.au_fname
 ORDER BY total DESC
 LIMIT 3;
@@ -71,9 +71,9 @@ LIMIT 3;
 Now modify your solution in Challenge 3 so that the output will display all 23 authors instead of the top 3. Note that the authors who have sold 0 titles should also appear in your output (ideally display `0` instead of `NULL` as the `TOTAL`). Also order your results based on `TOTAL` from high to low.
 */
 
-SELECT A.au_id, A.au_lname, A.au_fname, COALESCE(SUM(T.ytd_sales),0) AS total
+SELECT A.au_id, A.au_lname, A.au_fname, COALESCE(SUM(SQ.tot_qty),0) AS total
 FROM ironhack.authors AS A 
 LEFT JOIN ironhack.titleauthor AT ON AT.au_id = A.au_id
-LEFT JOIN ironhack.titles T ON T.title_id = AT.title_id
+LEFT JOIN (SELECT title_id, SUM(qty) AS tot_qty FROM sales GROUP BY title_id) SQ ON SQ.title_id = AT.title_ID
 GROUP BY A.au_id, A.au_lname, A.au_fname
 ORDER BY total DESC;
