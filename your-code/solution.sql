@@ -29,18 +29,21 @@ INNER JOIN ironhack.publishers P ON T.pub_id = P.pub_id
 GROUP BY au_id, pub_name;
 
 /* Challenge 3 - Best Selling Authors */
-SELECT A.au_id, au_lname, au_fname, sum(ytd_sales) AS "total"
+SELECT A.au_id, au_lname, au_fname, sum(qty) AS "total"
 FROM ironhack.authors A
 INNER JOIN ironhack.titleauthor TA ON A.au_id = TA.au_id
 INNER JOIN ironhack.titles T ON TA.title_id = T.title_id 
+INNER JOIN ironhack.sales S ON T.title_id = S.title_id
 GROUP BY A.au_id
 ORDER BY total DESC
 LIMIT 3;
 
 /* Challenge 4 - Best Selling Authors Ranking */
-SELECT A.au_id, au_lname, au_fname, COALESCE(sum(ytd_sales),0) AS "total"
+SELECT A.au_id, au_lname, au_fname, COALESCE(sum(qty),0) AS "total"
 FROM ironhack.authors A
 LEFT JOIN ironhack.titleauthor TA ON A.au_id = TA.au_id
 LEFT JOIN ironhack.titles T ON TA.title_id = T.title_id 
+LEFT JOIN ironhack.sales S ON T.title_id = S.title_id
 GROUP BY A.au_id
 ORDER BY total DESC;
+
