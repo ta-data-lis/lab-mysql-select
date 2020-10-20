@@ -49,21 +49,24 @@ inner join publishers P on T.pub_id = P.pub_id
 group by A.au_id, T.pub_id) as new_table_2;
 
 #Challenge 3
-select A.au_id as Author_ID, A.au_lname as Last_Name, A.au_fname as First_Name, count(T.title) as Total
+select A.au_id as Author_ID, A.au_lname as Last_Name, A.au_fname as First_Name, sum(T.ytd_sales) as Total
 from authors A
 inner join titleauthor TA on A.au_id = TA.au_id
 inner join titles T on T.title_id = TA.title_id
 inner join publishers P on T.pub_id = P.pub_id
 group by A.au_id
-order by count(T.title) desc
+order by Total desc
 limit 3;
 
+
 #Challenge 4
-select A.au_id as Author_ID, A.au_lname as Last_Name, A.au_fname as First_Name, count(T.title) as Total
+
+select A.au_id as Author_ID, A.au_lname as Last_Name, A.au_fname as First_Name, coalesce(sum(T.ytd_sales),0) as Total
 from authors A
 left join titleauthor TA on A.au_id = TA.au_id
 left join titles T on T.title_id = TA.title_id
 left join publishers P on T.pub_id = P.pub_id
 group by A.au_id
-order by count(T.title) desc;
+order by Total desc;
+
 
