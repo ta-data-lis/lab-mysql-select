@@ -1,0 +1,46 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql5-175af6c5d1e-5eb94251962bf783": {
+			"provider": "mysql",
+			"driver": "mysql5",
+			"name": "localhost",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"url": "jdbc:mysql://localhost:3306/",
+				"home": "C:\\Program Files\\MySQL\\MySQL Router 8.0",
+				"type": "dev",
+				"auth-model": "native"
+			}
+		},
+		"csvjdbc-175b2ff3de7-3fe8a574c46fd2a3": {
+			"provider": "generic",
+			"driver": "csvjdbc",
+			"name": "lab-mysql-first-queries",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"database": "G:\\GitHub\\MySQL\\lab-mysql-first-queries",
+				"url": "jdbc:relique:csv:G:\\GitHub\\MySQL\\lab-mysql-first-queries",
+				"type": "dev",
+				"auth-model": "native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false
+		}
+	}
+}
