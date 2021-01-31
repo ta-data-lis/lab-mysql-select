@@ -1,0 +1,35 @@
+# 1
+
+SELECT a.au_id 'AUTHOR ID', a.au_lname 'LAST NAME', a.au_fname 'FIRST NAME', t.title AS 'TITLE', p.pub_name AS 'PUBLISHER'
+FROM publications.authors a
+INNER JOIN publications.titleauthor ta ON ta.au_id = a.au_id
+INNER JOIN publications.titles t ON ta.title_id = t.title_id
+INNER JOIN publications.publishers p ON p.pub_id = t.pub_id
+ORDER BY 'AUTHOR ID' ASC;
+
+# 2
+
+SELECT ta.au_id 'AUTHOR ID', a.au_lname 'LAST NAME', a.au_fname 'FIRST NAME', p.pub_name 'PUBLISHER', COUNT(t.title) 'TITLE COUNT'
+FROM publications.authors a
+INNER JOIN publications.titleauthor ta ON ta.au_id = a.au_id
+INNER JOIN publications.titles t ON ta.title_id = t.title_id
+INNER JOIN publications.publishers p ON p.pub_id = t.pub_id
+GROUP BY p.pub_name, a.au_id
+ORDER BY 'TITLE COUNT' DESC, 'AUTHOR ID' DESC, 'PUBLISHER' DESC;
+
+# 3 
+SELECT a.au_id 'AUTHOR ID', a.au_lname 'LAST NAME', a.au_fname 'FIRST NAME', SUM(s.qty) 'TOTAL'
+FROM authors a
+INNER JOIN titleauthor ta ON a.au_id = ta.au_id
+INNER JOIN sales s ON ta.title_id = s.title_id
+GROUP BY a.au_id
+ORDER BY SUM(s.qty) DESC
+LIMIT 3;
+
+# 4
+SELECT ta.au_id 'AUTHOR ID', a.au_lname 'LAST NAME', a.au_fname 'FIRST NAME', IFNULL(SUM(s.qty),0) 'TOTAL'
+FROM authors a
+INNER JOIN titleauthor ta ON a.au_id = ta.au_id
+INNER JOIN sales s ON ta.title_id = s.title_id
+GROUP BY a.au_id
+ORDER BY SUM(s.qty) DESC;
