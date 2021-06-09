@@ -97,26 +97,19 @@ Also order your results based on TOTAL from high to low.
 
 */
 
-SELECT sales.title_id, sales.Author_ID, sales.Last_Name, sales.First_Name, SUM(Total_Sales) AS Total_Sales
-FROM
-(SELECT sa.title_id, Title_info.Author_ID, Title_info.Last_Name, Title_info.First_Name, COALESCE(sa.qty,0) AS Total_Sales
-FROM
-(SELECT Title.title_id, aut.au_id AS Author_ID, aut.au_lname AS Last_Name, aut.au_fname AS First_Name, Title.Publisher AS Publisher, Title.Title
-FROM
-(SELECT ta.au_id, ta.title_id, Title_Publisher.Title, Title_Publisher.Publisher
-FROM
-(SELECT ttl.title_id, ttl.title AS Title, pbl.pub_name AS Publisher
-FROM titles ttl
-CROSS JOIN publishers pbl
-ON pbl.pub_id = ttl.pub_id) AS Title_Publisher
-CROSS JOIN titleauthor as ta
-ON ta.title_id = Title_Publisher.title_id) AS Title
-CROSS JOIN authors aut
-ON aut.au_id = Title.au_id) AS Title_info
-CROSS JOIN sales sa
-ON sa.title_id = Title_info.title_id) AS sales
-GROUP BY sales.Author_ID
-ORDER BY Total_Sales ASC;
+CREATE TEMPORARY TABLE title_info
+SELECT aut.au_id, aut.au_lname, aut.au_fname, tta.title_id
+FROM authors aut
+LEFT JOIN titleauthor tta
+ON aut.au_id = tta.au_id
 
+CREATE TEMPORARY TABLE author_sales
+SELECT ti.au_id, ti.au_lname, ti.au_fname, COALESCE(SUM(sa.qty),0) AS TOTAL
+FROM sales sa
+RIGHT JOIN title_info ti
+ON sa.title_id = ti.title_id
+GROUP BY ti.au_id
+ORDER BY TOTAL DESC;
 
+SELECT * FROM author_sales;
 
