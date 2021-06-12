@@ -81,10 +81,49 @@ FROM challenge1;
 -- These features will be formally discussed in the Temp Tables and Subqueries lesson.*
 
 
-CREATE TABLE challenge2 AS
+CREATE TABLE IF NOT EXISTS challenge2 AS
 (SELECT AUTHOR_ID, LAST_NAME, FIRST_NAME, PUBLISHER, COUNT(DISTINCT(TITLE)) AS TITLE_COUNT
 FROM challenge1
 GROUP BY AUTHOR_ID);
 
+SELECT *
+FROM challenge2;
+
 SELECT SUM(TITLE_COUNT) AS NUMBER_OF_ROWS_IN_titleauthor
-FROM challenge2
+FROM challenge2;
+
+-- ## Challenge 3 - Best Selling Authors
+
+-- Who are the top 3 authors who have sold the highest number of titles? Write a query to find out.
+
+-- Requirements:
+
+-- * Your output should have the following columns:
+-- 	* `AUTHOR ID` - the ID of the author
+-- 	* `LAST NAME` - author last name
+-- 	* `FIRST NAME` - author first name
+-- 	* `TOTAL` - total number of titles sold from this author
+-- * Your output should be ordered based on `TOTAL` from high to low.
+-- * Only output the top 3 best selling authors.
+
+CREATE TABLE IF NOT EXISTS challenge3 AS
+(SELECT AUTHOR_ID, LAST_NAME, FIRST_NAME, COUNT(DISTINCT(TITLE)) AS TOTAL
+FROM challenge1
+GROUP BY TITLE);
+
+SELECT *
+FROM challenge3
+ORDER BY TOTAL  DESC
+LIMIT 3;
+
+-- ## Challenge 4 - Best Selling Authors Ranking
+
+-- Now modify your solution in Challenge 3 so that the output will display all 23 authors instead of the top 3. Note that the authors who have sold 0 titles should also appear in your output (ideally display `0` instead of `NULL` as the `TOTAL`). Also order your results based on `TOTAL` from high to low.
+
+CREATE TABLE challenge4 AS(
+SELECT *
+FROM challenge3
+ORDER BY TOTAL  DESC);
+
+SELECT *
+FROM challenge4;
