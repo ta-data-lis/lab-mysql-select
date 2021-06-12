@@ -79,3 +79,12 @@ FROM challenge1;
 -- Also check out [MySQL Group By](https://dev.mysql.com/doc/refman/8.0/en/group-by-modifiers.html)
 -- because you will count the rows of different groups of data. Refer to the references and learn by yourself.
 -- These features will be formally discussed in the Temp Tables and Subqueries lesson.*
+
+
+CREATE TABLE challenge2 AS
+(SELECT AUTHOR_ID, LAST_NAME, FIRST_NAME, PUBLISHER, COUNT(DISTINCT(TITLE)) AS TITLE_COUNT
+FROM challenge1
+GROUP BY AUTHOR_ID);
+
+SELECT SUM(TITLE_COUNT) AS NUMBER_OF_ROWS_IN_titleauthor
+FROM challenge2
