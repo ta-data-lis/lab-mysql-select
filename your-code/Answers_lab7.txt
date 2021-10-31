@@ -1,0 +1,107 @@
+CHALLENGE 1:
+
+	- QUERY:
+
+SELECT last_table_match.au_id , last_table_match.au_fname, last_table_match.au_lname , last_table_match.title , last_table_match.pub_id , publishers.pub_name
+FROM (SELECT publications.author_and_title.au_id , publications.author_and_title.au_lname , publications.author_and_title.au_fname, publications.author_and_title.title_id, publications.titles.title, publications.titles.pub_id
+FROM (SELECT publications.authors.au_id , publications.authors.au_lname , publications.authors.au_fname, publications.titleauthor.title_id
+FROM publications.authors
+INNER JOIN publications.titleauthor
+ON publications.authors.au_id = publications.titleauthor.au_id) author_and_title
+INNER JOIN publications.titles
+ON author_and_title.title_id =  publications.titles.title_id)  last_table_match
+INNER JOIN publications.publishers
+ON publications.last_table_match.pub_id = publications.publishers.pub_id;
+
+	 - RESULTS:
+
+213-46-8915	Marjorie	Green	The Busy Executive's Database Guide	1389	Algodata Infosystems
+409-56-7008	Abraham	Bennet	The Busy Executive's Database Guide	1389	Algodata Infosystems
+267-41-2394	Michael	O'Leary	Cooking with Computers: Surreptitious Balance Sheets	1389	Algodata Infosystems
+724-80-9391	Stearns	MacFeather	Cooking with Computers: Surreptitious Balance Sheets	1389	Algodata Infosystems
+213-46-8915	Marjorie	Green	You Can Combat Computer Stress!	0736	New Moon Books
+274-80-9391	Dean	Straight	Straight Talk About Computers	1389	Algodata Infosystems
+712-45-1867	Innes	del Castillo	Silicon Valley Gastronomic Treats	0877	Binnet & Hardley
+722-51-5454	Michel	DeFrance	The Gourmet Microwave	0877	Binnet & Hardley
+899-46-2035	Anne	Ringer	The Gourmet Microwave	0877	Binnet & Hardley
+238-95-7766	Cheryl	Carson	But Is It User Friendly?	1389	Algodata Infosystems
+427-17-2319	Ann	Dull	Secrets of Silicon Valley	1389	Algodata Infosystems
+846-92-7186	Sheryl	Hunter	Secrets of Silicon Valley	1389	Algodata Infosystems
+486-29-1786	Charlene	Locksley	Net Etiquette	1389	Algodata Infosystems
+724-80-9391	Stearns	MacFeather	Computer Phobic AND Non-Phobic Individuals: Behavior Variations	0877	Binnet & Hardley
+756-30-7391	Livia	Karsen	Computer Phobic AND Non-Phobic Individuals: Behavior Variations	0877	Binnet & Hardley
+899-46-2035	Anne	Ringer	Is Anger the Enemy?	0736	New Moon Books
+998-72-3567	Albert	Ringer	Is Anger the Enemy?	0736	New Moon Books
+998-72-3567	Albert	Ringer	Life Without Fear	0736	New Moon Books
+172-32-1176	Johnson	White	Prolonged Data Deprivation: Four Case Studies	0736	New Moon Books
+486-29-1786	Charlene	Locksley	Emotional Security: A New Algorithm	0736	New Moon Books
+807-91-6654	Sylvia	Panteley	Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean	0877	Binnet & Hardley
+648-92-1872	Reginald	Blotchet-Halls	Fifty Years in Buckingham Palace Kitchens	0877	Binnet & Hardley
+267-41-2394	Michael	O'Leary	Sushi, Anyone?	0877	Binnet & Hardley
+472-27-2349	Burt	Gringlesby	Sushi, Anyone?	0877	Binnet & Hardley
+672-71-3249	Akiko	Yokomoto	Sushi, Anyone?	0877	Binnet & Hardley
+
+
+
+CHALLENGE 3 : 
+
+	- QUERY: 
+
+SELECT *
+FROM (SELECT publications.author_and_title.au_id , publications.author_and_title.au_lname , publications.author_and_title.au_fname, publications.author_and_title.title_id, publications.titles.title, publications.titles.ytd_sales
+FROM (SELECT publications.authors.au_id , publications.authors.au_lname , publications.authors.au_fname, publications.titleauthor.title_id
+FROM publications.authors
+INNER JOIN publications.titleauthor
+ON publications.authors.au_id = publications.titleauthor.au_id) author_and_title
+INNER JOIN publications.titles
+ON author_and_title.title_id =  publications.titles.title_id)  last_table_match
+GROUP BY last_table_match.au_id
+ORDER BY ytd_sales DESC 
+LIMIT 3;
+
+	- RESULTS:
+
+Ringer	Anne
+DeFrance	Michel
+Blotchet-Halls	Reginald
+
+
+
+CHALLENGE 4 : 
+
+	- QUERY:
+
+UPDATE publications.titles SET publications.titles.ytd_sales =0 WHERE publications.titles.ytd_sales is null;
+
+SELECT *
+FROM (SELECT publications.author_and_title.au_id , publications.author_and_title.au_lname , publications.author_and_title.au_fname, publications.author_and_title.title_id, publications.titles.title, publications.titles.ytd_sales
+FROM (SELECT publications.authors.au_id , publications.authors.au_lname , publications.authors.au_fname, publications.titleauthor.title_id
+FROM publications.authors
+INNER JOIN publications.titleauthor
+ON publications.authors.au_id = publications.titleauthor.au_id) author_and_title
+INNER JOIN publications.titles
+ON author_and_title.title_id =  publications.titles.title_id)  last_table_match
+GROUP BY last_table_match.au_id
+ORDER BY ytd_sales DESC ;
+
+
+	- RESULTS:
+722-51-5454	DeFrance	Michel	MC3021	The Gourmet Microwave	22246
+899-46-2035	Ringer	Anne	MC3021	The Gourmet Microwave	22246
+648-92-1872	Blotchet-Halls	Reginald	TC4203	Fifty Years in Buckingham Palace Kitchens	15096
+238-95-7766	Carson	Cheryl	PC1035	But Is It User Friendly?	8780
+213-46-8915	Green	Marjorie	BU1032	The Busy Executive's Database Guide	4095
+409-56-7008	Bennet	Abraham	BU1032	The Busy Executive's Database Guide	4095
+274-80-9391	Straight	Dean	BU7832	Straight Talk About Computers	4095
+427-17-2319	Dull	Ann	PC8888	Secrets of Silicon Valley	4095
+846-92-7186	Hunter	Sheryl	PC8888	Secrets of Silicon Valley	4095
+472-27-2349	Gringlesby	Burt	TC7777	Sushi, Anyone?	4095
+672-71-3249	Yokomoto	Akiko	TC7777	Sushi, Anyone?	4095
+172-32-1176	White	Johnson	PS3333	Prolonged Data Deprivation: Four Case Studies	4072
+267-41-2394	O'Leary	Michael	BU1111	Cooking with Computers: Surreptitious Balance Sheets	3876
+724-80-9391	MacFeather	Stearns	BU1111	Cooking with Computers: Surreptitious Balance Sheets	3876
+998-72-3567	Ringer	Albert	PS2091	Is Anger the Enemy?	2045
+712-45-1867	del Castillo	Innes	MC2222	Silicon Valley Gastronomic Treats	2032
+756-30-7391	Karsen	Livia	PS1372	Computer Phobic AND Non-Phobic Individuals: Behavior Variations	375
+807-91-6654	Panteley	Sylvia	TC3218	Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean	375
+486-29-1786	Locksley	Charlene	PC9999	Net Etiquette	
