@@ -27,14 +27,14 @@ GROUP BY a.au_id,
     p.pub_name;
 -- Challenge 3
 -- Who are the top 3 authors who have sold the highest number of titles?
+USE publications;
 SELECT a.au_id as AUTHOR_ID,
     a.au_lname AS LAST_NAME,
     a.au_fname AS FIRST_NAME,
-    COUNT(*) AS TOTAL
-FROM titles t
-    INNER JOIN titleauthor ta ON ta.title_id = t.title_id
-    INNER JOIN authors a ON a.au_id = ta.au_id
-    INNER JOIN publishers p ON p.pub_id = t.pub_id
+    SUM(s.qty) AS TOTAL
+FROM authors a
+    LEFT JOIN titleauthor ta ON a.au_id = ta.au_id
+    LEFT JOIN sales s ON ta.title_id = s.title_id
 GROUP BY AUTHOR_ID,
     LAST_NAME,
     FIRST_NAME
