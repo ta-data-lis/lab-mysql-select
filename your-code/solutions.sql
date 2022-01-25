@@ -45,11 +45,10 @@ LIMIT 3;
 SELECT a.au_id as AUTHOR_ID,
     a.au_lname AS LAST_NAME,
     a.au_fname AS FIRST_NAME,
-    IFNULL(COUNT(*), 0) AS TOTAL
-FROM titles t
-    INNER JOIN titleauthor ta ON ta.title_id = t.title_id
-    INNER JOIN authors a ON a.au_id = ta.au_id
-    INNER JOIN publishers p ON p.pub_id = t.pub_id
+    IFNULL(COUNT(s.qty), 0) AS TOTAL
+FROM authors a
+    LEFT JOIN titleauthor ta ON a.au_id = ta.au_id
+    LEFT JOIN sales s ON ta.title_id = s.title_id
 GROUP BY AUTHOR_ID,
     LAST_NAME,
     FIRST_NAME
