@@ -12,11 +12,11 @@ You will create a `solutions.sql` file in the `your-code` directory to record yo
 
 In this challenge you will write a MySQL `SELECT` query that joins various tables to figure out what titles each author has published at which publishers. Your output should have at least the following columns:
 
-* `AUTHOR ID` - the ID of the author
-* `LAST NAME` - author last name
-* `FIRST NAME` - author first name
-* `TITLE` - name of the published title
-* `PUBLISHER` - name of the publisher where the title was published
+* `AUTHOR ID` - the ID of the author // au_id
+* `LAST NAME` - author last name  // au_lname
+* `FIRST NAME` - author first name  // au_fname
+* `TITLE` - name of the published title // title_id
+* `PUBLISHER` - name of the publisher where the title was published // pub_id + pub_name
 
 Your output will look something like below:
 
